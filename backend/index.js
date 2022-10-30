@@ -2,8 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 
-// BACKEND FEITO COM JAVASCRIP SIMPLES, TENDO COMO BASE O EXEMPLO DO PROFESSOR
-
 app.use(cors({
     origin: '*'
 }));
@@ -15,17 +13,17 @@ app.get("/", (req, res) => {
     res.send(['Ola do diretorio normal!'])
 })
 
-// exemplo de post do professor
-app.post('/check-user', (req, res) => {   
+app.post('/square', (req, res) => {
 
-    let username = req.body.username    
+    let valor = req.body.valor
 
-    console.log(username)
+    if (typeof valor == typeof Null) {
 
-    if(users.indexOf(username) > -1) {
-        res.status(200).json({userExists: true})
+        res.status(400).json()
     } else {
-        res.status(200).json({userExists: false})
+
+        let resultado = valor * valor
+        res.status(200).json({valor: resultado})
     }
 })
 

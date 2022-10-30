@@ -11,14 +11,14 @@ function App() {
 
   const [contador, setContador] = useState(0)
 
-  function aoClicar(){
+  function somarUmAoContador(){
     console.log("Clicou!")
     setContador(contador + 1)
   }
 
   //falta exemplo de post!
 
-  async function testarBackend() {
+  async function testarGetDoBackend() {
 
     try {
       let resposta = await fetch(URL_BACKEND)
@@ -33,6 +33,32 @@ function App() {
     }
   }
 
+  async function pedirQuadradoAoBackend() {
+
+    let numero = contador
+
+    const dados = {valor: numero};
+
+    const requestForm = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
+        body: JSON.stringify(dados)
+    };
+
+    const response = await fetch(URL_BACKEND + "square", requestForm);
+
+    if (response.status === 200) {
+
+      const data = await response.json();
+
+      console.log("Quadrado do contador (" + numero + ") é: " + data.valor)
+    }
+    else 
+    {
+      console.log("Comunicacao falhou! Codigo de erro: " + response.status)
+    }
+  }
+
   return (
     <>
       <div className="App-header">
@@ -40,7 +66,7 @@ function App() {
         <p>Ola mundo</p>
 
         <Button
-          onClick={aoClicar}
+          onClick={somarUmAoContador}
         >
           Este eh um botao do bootstrap
         </Button>
@@ -54,7 +80,7 @@ function App() {
         )}
 
         <Button
-          onClick={testarBackend}
+          onClick={pedirQuadradoAoBackend}
         >
           Este botao testa backend. Cheque o console.
         </Button>
