@@ -3,11 +3,23 @@
 
 //import {ControlUsuarios} from './components/usuarios'
 
+const URL_USUARIOS_GET_ALL = "/usuarios";
+const URL_USUARIOS_NOVO = "/usuarios/cadastrar/:username/:password";
+const URL_USUARIOS_REMOVER = "/usuarios/remover/:username";
+const URL_USUARIOS_LOGAR = "/usuarios/logar/:username/:password";
+const URL_USUARIOS_ALTERAR_USERNAME = "/usuarios/alterar/username/:username_atual/:username_novo";
+const URL_USUARIOS_ALTERAR_PASSWORD = "/usuarios/alterar/password/:username/:password-atual/:password-nova";
+
+const URL_POSTAGENS_GET_ALL = "/postagens";
+const URL_POSTAGENS_NOVO = "/postagens/novo";
+
+// Criei um "modulo" node para deixar funcionalidades em arquivo separado.
 const {ControlUsuarios, ControlPostagens} = require('service_usuarios');
 
 let controlUsuarios = new ControlUsuarios();
 let controlPostagens = new ControlPostagens();
 
+// Coisas do banco de dados. Nao funcional ainda. Nao utilizar!
 const {MongoClient} = require('mongodb')
 const DB_NAME = 'backenddb'
 const USERS_COLLECTION_NAME = 'usuarios'
@@ -44,7 +56,6 @@ async function pegarTodaBase() {
 
     return lista
 }
-
 // Fim da parte do banco com MongoDB
 
 function isDadoDefined(dado) {
@@ -63,32 +74,42 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT || 3212
 
+// Funcionalidades do tipo GET
 app.use(express.static('public'));
 
 app.get("/hello", (req, res) => {
     res.send("hello!")
 })
 
-app.get("/usuarios", (req, res) => {
+app.get(URL_USUARIOS_GET_ALL, (req, res) => {
     res.status(200).json(controlUsuarios.users);
 })
 
-app.get("/postagens", (req, res) => {
+app.get(URL_POSTAGENS_GET_ALL, (req, res) => {
     res.status(200).json(controlPostagens.postagens);
 })
 
+// POSTs via JSON
 app.use(bodyParser.json())
-app.post("/usuarios/cadastrar/via-json", (req, res) => {
+
+app.post(URL_POSTAGENS_NOVO, (req, res) => {
     const body = req.body;
     const username = body.username;
-    const password = body.password;
+    const titulo = body.titulo;
+    const texto = body.texto;
 
-    res.status(200).send();
+    let resultado = null;
+
+    if(isDadoDefined(username) && isDadoDefined(titulo) && isDadoDefined(texto)){
+        resultado = controlPostagens.novaPostagem(username, titulo, texto);
+    }
+    res.status(200).send(resultado);
 })
 
 // POSTs via URL
 app.use(bodyParser.urlencoded({extended: false}))
-app.get("/usuarios/cadastrar/:username/:password", (req, res) => {
+
+app.get(URL_USUARIOS_NOVO, (req, res) => {
     const routeParams = req.params;
     const username = routeParams.username;
     const password = routeParams.password;
@@ -106,7 +127,7 @@ app.get("/usuarios/cadastrar/:username/:password", (req, res) => {
     res.status(status).send(resultado);
 })
 
-app.get("/usuarios/remover/:username", (req, res) => {
+app.get(URL_USUARIOS_REMOVER, (req, res) => {
     const routeParams = req.params
     const username = routeParams.username
 
@@ -115,7 +136,7 @@ app.get("/usuarios/remover/:username", (req, res) => {
     res.status(200).send(usuario_deletado);
 })
 
-app.get("/usuarios/logar/:username/:password", (req, res) => {
+app.get(URL_USUARIOS_LOGAR, (req, res) => {
     const routeParams = req.params;
     const username = routeParams.username;
     const password = routeParams.password;
@@ -125,7 +146,7 @@ app.get("/usuarios/logar/:username/:password", (req, res) => {
     res.status(200).send(resultado);
 })
 
-app.get("/usuarios/alterar/username/:username_atual/:username_novo", (req, res) => {
+app.get(URL_USUARIOS_ALTERAR_USERNAME, (req, res) => {
     const routeParams = req.params;
     const username_atual = routeParams.username_atual;
     const username_novo = routeParams.username_novo;
@@ -136,12 +157,14 @@ app.get("/usuarios/alterar/username/:username_atual/:username_novo", (req, res) 
     res.status(200).send(resultado);
 })
 
-app.get("/usuarios/alterar/password/:username_atual/:username_novo", (req, res) => {
+// Retorna true se operacao foi sucesso
+app.get(URL_USUARIOS_ALTERAR_PASSWORD, (req, res) => {
     const routeParams = req.params;
-    const username_atual = routeParams.username_atual;
-    const username_novo = routeParams.username_novo;
+    const username = routeParams.username;
+    const password_atual = routeParams.password-atual;
+    const password_nova = routeParams.password-nova;
 
-    let resultado = controlUsuarios.alterarUsername(username_atual, username_novo);
+    let resultado = controlUsuarios.alterarPassword(username, password_atual, password_nova);
 
     res.status(200).send(resultado);
 })

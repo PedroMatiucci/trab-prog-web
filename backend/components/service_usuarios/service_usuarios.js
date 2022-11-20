@@ -20,16 +20,20 @@ class ControlPostagens {
         return postagens_filtradas;
     }
 
-    novaPostagem(body){
+    novaPostagem(username, titulo, texto){
         if(this.postagens.length >= MAX_POSTAGENS){
             this.#deletarMaisAntigo();
         }
 
-        this.postagens.push({
-            "username": body.username,
-            "titulo": body.titulo,
-            "texto": body.texto
-        })
+        const postagem = {
+            "username": username,
+            "titulo": titulo,
+            "texto": texto
+        }
+
+        this.postagens.push(postagem);
+
+        return postagem;
     }
 
     atualizarUsernameDasPostagens(username_antigo, username_novo){
@@ -96,11 +100,25 @@ class ControlUsuarios {
         let usuario = this.buscar(username_atual);
         let usuario_com_nome_novo = this.buscar(username_novo);
 
-        if((usuario != null) && (usuario_com_nome_novo == null)){
+        let sucesso = false;
+
+        if((usuario != null) && (usuario_com_nome_novo == null)) {
             usuario.username = username_novo;
+            sucesso = true;
         }
 
-        return usuario;
+        return sucesso;
+    }
+
+    alterarPassword(username, password_atual, password_novo) {
+        let usuario = this.buscar(username);
+
+        if(usuario != null) {
+            if(usuario.password = password_atual){
+                usuario.password = password_novo;
+            }
+        }
+        return usuario
     }
 
     deletar(username) {

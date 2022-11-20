@@ -8,32 +8,22 @@
     <script src="client.js" defer></script>
 </head>
 <body>
-    <br><p>Ola !!!</p><br>
-    <button onclick="pegarTodosUsuarios()"> GetAllUsers </button><br>
-    <button onclick="exemploCadastrarViaPostJson()"> exemploCadastrarViaPostJson </button><br>
+    <h1>Pagina exemplo para testar metodos do backend</h1>
+
+    <button onclick="pegarTodosUsuarios()"> pegarTodosUsuarios </button><br>
+    <button onclick="pegarTodasPostagens()"> pegarTodasPostagens </button><br>
+    <button onclick="exemploPostagemViaPostJson()"> exemploPostagemViaPostJson </button><br>
     <button onclick="exemploCadastrarViaGetUrl()"> exemploCadastrarViaGetUrl </button><br>
 
-    <form id="userform2">
-        <label>Usuário</label>
-        <input type="text" name="user" id="form3user"><br>
-        <label>E-mail</label>
-        <input type="text" name="mail" id="form3mail"><br>
-        <button type="submit">Cadastrar</button><br>
-    </form>
+    <h2>Cadastre um usuario com esse exemplo</h2>
 
     <form id="userform3">
         <label>Usuário</label>
         <input type="text" name="user" id="form3user"><br>
-        <label>E-mail</label>
-        <input type="text" name="mail" id="form3mail"><br>
+        <label>Senha</label>
+        <input type="text" name="password" id="form3password"><br>
         <button type="submit">Cadastrar</button><br>
     </form>
-    <form id="userform4">
-        <label>Usuário</label>
-        <input type="text" name="user" id="form4user"><br>
-        <label>E-mail</label>
-        <input type="text" name="mail" id="form4mail"><br>
-        <button type="submit">Cadastrar</button><br>
-    </form>
+
 </body>
 </html>
