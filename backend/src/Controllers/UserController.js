@@ -3,31 +3,74 @@ const UserModel = require('../Models/UserModel');
 class UserController {
   //criar usuarios
   async create(req, res) {
-    const createdUser = await UserModel.create(req.body);
+    try {
+      const createdUser = await UserModel.create(req.body);
     
-    return res.status(200).json(createdUser);
+      return res.status(200).json(createdUser);
+    } catch (error) {
+      return res.status(404).json({ message: "Falha ao criar usuario"});
+    }
   }
 
   //listar usuarios
   async index(req, res) {
-    const users = await UserModel.find();
+    try {
+      const users = await UserModel.find();
 
-    return res.status(200).json({ users });
+      return res.status(200).json({ users });
+    } catch (error) {
+      return res.status(404).json({ message: "Falha ao listar usuarios"});
+    }
   }
 
   //mostrar um usuario especifico
-  async show() {
+  async show(req, res) {
+    try {
+      const { id } = req.params;
+    
+      const user = await UserModel.findById(id);
 
+      if(!user) {
+        return res.status(404).json({ message: "Usuario nao existe"});
+      }
+
+      return res.status(200).json(user);
+      
+    } catch (error) {
+      return res.status(404).json({ message: "Falha ao encontrar usuario"})
+    }
   }
 
   //atualizar um usuario
-  async update() {
+  async update(req, res) {
+    try {
+      const { id } = req.params;
 
+      await UserModel.findByIdAndUpdate(id, req.body);
+
+      return res.status(200).json({ message: "Usuario atualizado"});
+    } catch (error) {
+      return res.status(404).json({ message: "Falha ao atualizar usuario"});
+    }
+  
   }
 
   //deletar um usuario
-  async destroy () {
+  async destroy (req, res) {
+    try {
+      const { id } = req.params;
 
+      const userDeleted = await UserModel.findByIdAndDelete(id);
+
+      if(!userDeleted){
+        return res.status(404).json({ message: "Usuario não existe"});
+      }
+
+      return res.status(200).json({ message: "Usuario deletado"});
+    
+    } catch (error) {
+      return res.status(404).json({ message: "Falha ao deletar usuario"});
+    }
   }
 }
 
