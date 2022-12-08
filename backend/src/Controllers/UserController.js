@@ -4,6 +4,12 @@ class UserController {
   //criar usuarios
   async create(req, res) {
     try {
+      const { username, password } = req.body;
+
+      if (!usuario || !password) {
+        return res.status(400).json({ message: "Usuario e senha são obrigatórios"});
+      }
+
       const createdUser = await UserModel.create(req.body);
     
       return res.status(200).json(createdUser);
