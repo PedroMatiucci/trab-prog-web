@@ -13,7 +13,7 @@ class UserController {
       }
 
       if (!usuario || !password) {
-        return res.status(400).json({ message: "Usuario e senha são obrigatórios"});
+        return res.status(404).json({ message: "Falha ao criar usuario"});
       }
 
       const createdUser = await UserModel.create(req.body);
