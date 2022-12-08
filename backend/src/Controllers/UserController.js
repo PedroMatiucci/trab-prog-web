@@ -6,6 +6,12 @@ class UserController {
     try {
       const { username, password } = req.body;
 
+      const userAlreadyExists = await UserModel.findOne({ username });
+
+      if (userAlreadyExists){
+        return res.status(400).json({ message: "Um usuario com esse nome já existe"});
+      }
+
       if (!usuario || !password) {
         return res.status(400).json({ message: "Usuario e senha são obrigatórios"});
       }
