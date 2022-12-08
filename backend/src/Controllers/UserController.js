@@ -12,7 +12,7 @@ class UserController {
         return res.status(400).json({ message: "Um usuario com esse nome já existe"});
       }
 
-      if (!usuario || !password) {
+      if (!username || !password) {
         return res.status(404).json({ message: "Falha ao criar usuario"});
       }
 
